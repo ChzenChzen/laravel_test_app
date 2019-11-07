@@ -1,0 +1,16 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "laravel",
+            "dialect": "MySQL",
+            "isActive": true,
+            "isConnected": true,
+            "name": "docker-laravel db",
+            "password": "29041986",
+            "port": 3306,
+            "server": "localhost",
+            "username": "laraveluser"
+        }
+    ],
+    "python.pythonPath": "/usr/local/bin/python3"
+}
