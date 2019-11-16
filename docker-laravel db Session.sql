@@ -2,6 +2,10 @@ show tables;
 
 select * from users;
 select * from blog_categories;
+describe blog_categories;
+
+select id from blog_categories;
+
 select * from blog_posts;
 
 
