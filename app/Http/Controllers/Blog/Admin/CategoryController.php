@@ -6,6 +6,7 @@ use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Http\Requests\BlogCategoryCreateRequest;
+use Illuminate\Support\Str;
 
 class CategoryController extends BaseController
 {
@@ -47,9 +48,17 @@ class CategoryController extends BaseController
         }
 
         // Create an object but won't add to DB.
-        $item = new BlogCategory($data);
-        dd($item);
-        $item->save();
+        $item = (new BlogCategory())->create($data);
+
+        if ($item) {
+            return redirect()
+                ->route('blog.admin.categories.edit', [$item->id])
+                ->with(['success' => 'Saved successfully']);
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Saved unsuccessfully'])
+                ->withInput();
+        }
     }
 
 
@@ -76,17 +85,6 @@ class CategoryController extends BaseController
      */
     public function update(BlogCategoryUpdateRequest $request, $id)
     {
-        // $rules = [
-        //     'title' => 'required|min:5|max:200',
-        //     'slug' => 'max:200',
-        //     'description' => 'string|max:500|min:3',
-        //     'parent_id' => 'required|integer|exists:blog_categories,id',
-        // ];
-
-        // $validatedData = $request->validate($rules);
-
-        // dd($validatedData);
-
         $item = BlogCategory::find($id);
 
         if (empty($item)) {
@@ -96,7 +94,12 @@ class CategoryController extends BaseController
         }
 
         $data = $request->all();
-        $result = $item->fill($data)->save();
+        
+        if (empty($data['slug'])) {
+            $data['slug'] = Str::slug($data['title']);
+        }
+
+        $result = $item->update($data);
 
         if ($result) {
             return redirect()
